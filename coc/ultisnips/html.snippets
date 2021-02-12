@@ -1,0 +1,233 @@
+# A valid snippet should starts with:
+#
+#		snippet trigger_word [ "description" [ options ] ]
+#
+# and end with:
+#
+#		endsnippet
+#
+# Snippet options:
+#
+#		b - Beginning of line.
+#		i - In-word expansion.
+#		w - Word boundary.
+#		r - Regular expression
+#		e - Custom context snippet
+#		A - Snippet will be triggered automatically, when condition matches.
+#
+# Basic example:
+#
+#		snippet emitter "emitter properties" b
+#		private readonly ${1} = new Emitter<$2>()
+#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#		endsnippet
+#
+# Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+
+snippet variable "变量定义" 
+{{ ${0} }}
+endsnippet
+
+snippet html "html简单框架" 
+<!DOCTYPE html>
+<html lang="zh_CN">
+	<head>
+		<!-- 文档头部 -->
+		<meta charset="UTF-8">
+		<title> ${1:文档标题} </title>
+	</head>
+	<body>
+		<!-- 文档主体 -->
+		${0}
+
+	</body>
+</html>
+endsnippet
+
+snippet sytle "定义内部样式表"
+<style> ${1:样式} </style>
+endsnippet
+
+snippet script "定义JS代码" 
+<script> ${1:代码}</script>
+endsnippet
+
+snippet link "超链接标签" 
+<a href="${1:链接}" target="${2:_blank}${3:_self}" >${4:文本}</a>
+endsnippet
+
+snippet div "div" 
+<div ${1:id}${2:class}="${3:name}">
+	${0}
+</div>
+endsnippet
+snippet paragraph "段落" 
+<p>
+	${1:文档段落}
+</p>
+endsnippet
+
+snippet text-show "基于变量的文本显示"
+$('${1:#}${2:.}${3:name}').show().html('${4:显示文本}')
+${0}
+endsnippet
+
+snippet open-view "打开视图函数" 
+location.href = '/${1:视图函数}/'
+${0}
+endsnippet
+
+
+snippet table "表格框架定义" 
+<table>
+	<tbody>
+		${0:内容定义}
+
+	</tbody>
+</table> 
+endsnippet
+
+snippet table-add_row "表格添加行"
+<tr>
+	${1:内容}
+</tr>
+endsnippet
+
+snippet table-add_line "表格添加列"
+<th style="text-align:center">${1:内容}</th>
+${0}
+endsnippet
+
+
+# for循环
+snippet for "for循环"
+{% for ${1:item} in ${2:列表} %}
+	${3:执行}
+	{% empty %}
+		${0}
+{% endfor %}
+endsnippet
+
+snippet for-counter "for循环--计数变量" 
+{{forloop.counter}}
+endsnippet
+snippet for-counter0 "for循环--计数变量" 
+{{forloop.counter0}}
+endsnippet
+
+snippet for-revcounter "for循环--反计数变量" 
+{{forloop.revcounter}}
+endsnippet
+snippet for-revcounter0 "for循环--反计数变量" 
+{{forloop.revcounter0}}
+endsnippet
+
+snippet for-if-counter "for循环-if+计数" 
+{% if forloop.counter ${1:表达式} %}
+	${0}
+{%endif%}
+endsnippet
+snippet for-if-counter0 "for循环-if+计数" 
+{% if forloop.counter0 ${1:表达式} %}
+	${0}
+{%endif%}
+endsnippet
+snippet for-if-revcounter "for循环-if+反计数" 
+{% if forloop.revcounter ${1:表达式} %}
+	${0}
+{%endif%}
+endsnippet
+snippet for-if-revcounter0 "for循环-if+反计数" 
+{% if forloop.revcounter0 ${1:表达式} %}
+	${0}
+{%endif%}
+endsnippet
+
+
+snippet for-first "for循环-第一次执行" 
+{% if forloop.first %}
+	${0}
+{%endif%}
+endsnippet
+snippet for-nfirst "for循环-非第一次执行" 
+{% if not forloop.first %}
+	${0}
+{%endif%}
+endsnippet
+
+snippet for-last "for循环- 最后一次执行" 
+{% if forloop.last %}
+	${0}
+{%endif%}
+endsnippet
+snippet for-nlast "for循环- 非最后一次执行" 
+{% if not forloop.last %}
+	${0}
+{%endif%}
+endsnippet
+
+# if语句
+snippet if "if语句" 
+{% if ${1:条件} %}
+	${0}
+{% endif %}
+endsnippet
+snippet elif "if中elif语句" 
+{%elif ${1:条件} %}
+	${0}
+endsnippet
+snippet else "if中else语句" 
+{%else%}
+	${0}
+endsnippet
+
+# ajax语法
+snippet ajax-input_text "ajax-输入文本" 
+${1:显示文本}<input type="${2:text}${3:password}" id="${4:id}"><br>
+${0}
+endsnippet
+
+snippet ajax-input_btn "ajax-输入按钮" 
+<input type="button" id='${1:name}' value="${2:显示文本}">
+${0}
+endsnippet
+
+snippet ajax-deal_btn "ajax-按钮处理脚本" b
+<script>
+	$(function (){
+		$('${1:.}${2:#}${3:name}').click(function(){
+			<!-- 从网页获取数据 -->
+			$.ajax({
+				url:'/${4:视图函数}/',
+				type:'post',
+				data:{${5:需要向视图函数传输的数据},
+				},
+				dataType:'json',
+				<!-- 成功的回调函数 -->
+				success:function(data){
+					<!-- 配合view视图中的函数返回值 -->
+					if (data.res==0){
+						${6:失败时执行}
+					}
+					else{
+						${7:成功时执行}
+					}},
+				<!-- 失败的回调函数 -->
+				error:function(err){
+
+				}})})})
+</script>
+endsnippet
+
+snippet ajax-aquire "通过输入框名字获取数据" b
+${1:变量} = $('#${2:name}').val();
+${0}
+endsnippet
+
+snippet ajax-data_json "ajax-json数据" 
+'username':username,
+'${1:name}':${2:变量},
+endsnippet
+
+
+

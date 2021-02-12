@@ -1,0 +1,33 @@
+{
+  "configurations": {
+    "Launch": {
+      "adapter": "vscode-cpptools",
+      "configuration": {
+        "request": "launch",
+				"name": "cpp",
+        "type": "cppdbg",
+				"program": "${fileDirname}/a.out",
+        "args": ["*${ProgramArgs}"],
+				"cwd": "${workspaceRoot}",
+				"environment": [],
+        "externalConsole": false,
+        "stopAtEntry": true,
+        "externalConsole": true,
+        "MIMode": "lldb",
+				"logging": {
+				"engineLogging": true
+      }
+    }},
+    "Attach": {
+      "adapter": "vscode-cpptools",
+      "configuration": {
+        "request": "attach",
+				"name": "cpp",
+				"type": "cppdbg",
+        "program": "${file}",
+        "MIMode": "lldb"
+      }
+    }
+  }
+}
+

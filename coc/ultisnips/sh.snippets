@@ -1,0 +1,85 @@
+# A valid snippet should starts with:
+#
+#		snippet trigger_word [ "description" [ options ] ]
+#
+# and end with:
+#
+#		endsnippet
+#
+# Snippet options:
+#
+#		b - Beginning of line.
+#		i - In-word expansion.
+#		w - Word boundary.
+#		r - Regular expression
+#		e - Custom context snippet
+#		A - Snippet will be triggered automatically, when condition matches.
+#
+# Basic example:
+#
+#		snippet emitter "emitter properties" b
+#		private readonly ${1} = new Emitter<$2>()
+#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#		endsnippet
+#
+# Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+
+snippet if_return_normal "命令执行正常"
+# 命令执行正常
+if [ $? -eq 0 ]; then
+	${0}
+fi
+
+endsnippet
+snippet if_return_abnormal "命令执行异常"
+# 命令执行异常
+if [ $? -eq 1 ]; then
+	${0}
+fi
+
+endsnippet
+
+snippet if_is_content "如果目录存在" b
+# 目录存在
+if [ -d "${1:content}" ]; then
+	${0}
+fi
+
+endsnippet
+snippet if_not_content "如果目录不存在" b
+# 目录不存在
+if [ ! -d "${1:content}" ]; then
+	${0}
+fi
+
+endsnippet
+
+snippet if_is_file "如果文件存在" b
+# 文件存在
+if [ -f "${1:file}" ]; then
+	${0}
+fi
+
+endsnippet
+snippet if_not_file "如果文件不存在" b
+# 文件不存在
+if [ ! -f "${1:file}" ]; then
+	${0}
+fi
+endsnippet
+
+snippet if_empty_string "如果字符串为空" b
+# 字符串为空
+if [ -z "${1:string}" ]; then
+	${0}
+fi
+endsnippet
+
+snippet if_nempty_string "如果字符串非空" b
+# 字符串非空
+if [ -n "${1:string}" ]; then
+	${0}
+fi
+endsnippet
+
+

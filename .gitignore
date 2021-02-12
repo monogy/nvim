@@ -1,0 +1,12 @@
+/tmp
+/view
+*.swo
+*.zwc
+/coc/commands
+/coc/list-commands-history.json
+/coc/list-yank-history.json
+/coc/memos.json
+/coc/mru
+/coc/snippets-mru
+/coc/extensions/coc-yank-data
+/plugged

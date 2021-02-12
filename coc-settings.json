@@ -1,0 +1,25 @@
+{
+	"yank.enableCompletion" : true,
+	"diagnostic.virtualText": true,
+	"codeLens.enable": true,
+	"suggest.detailMaxLength": 60,
+	"languageserver": {
+		"lua": {
+			"command": "lua-lsp",
+			"filetypes": ["lua"]
+		},
+		"golang": {
+			"command": "gopls",
+			"rootPatterns": ["go.mod"],
+			"filetypes": ["go"]
+		},
+		"bash": {
+			"command": "bash-language-server",
+			"args": ["start"],
+			"filetypes": ["sh"],
+			"ignoredRootPaths": []
+		}	
+	}
+}
+
+

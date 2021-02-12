@@ -1,0 +1,596 @@
+# A valid snippet should starts with:
+#
+#		snippet trigger_word [ "description" [ options ] ]
+#
+# and end with:
+#
+#		endsnippet
+#
+# Snippet options:
+#
+#		b - Beginning of line.
+#		i - In-word expansion.
+#		w - Word boundary.
+#		r - Regular expression
+#		e - Custom context snippet
+#		A - Snippet will be triggered automatically, when condition matches.
+#
+# Basic example:
+#
+#		snippet emitter "emitter properties" b
+#		private readonly ${1} = new Emitter<$2>()
+#		public readonly ${1/^_(.*)/$1/}: Event<$2> = this.$1.event
+#		endsnippet
+#
+# Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+
+snippet limport "导入常用库"
+# 导入PyQt5
+# from PyQt5 import QtWidgets, QtCore, QtGui
+# from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog
+# import PyQt5.QtGui
+# from PyQt5.QtCore import pyqtSignal
+# from PyQt5.QtCore import Qt
+# import sys
+# import time
+# import math
+# import os
+# import pigpio	#GPIO
+# import pysnooper	#调试
+# import threading
+# import pyqtgraph as pg
+# import numpy as np
+# from ctypes import * #c语言连接
+# import openpyxl #excel操作
+# import hashlib #md5
+# import configparser
+
+${0}
+endsnippet
+
+snippet class_noWin "非窗口类片段" 
+#-----------------------------------------------------------
+# 说明:${1}
+#-----------------------------------------------------------
+class ${2:classname}(object):
+	def __init__(self):
+		'''Initial of the Class'''
+		self.Thread_Run=False
+		self.program_state = 0
+		self.errormsg = ''
+		${4}
+
+	def __str__(self):
+		description = '${3:类描述}'
+		return description 
+		
+
+
+${0}
+endsnippet
+
+snippet class_Win "窗口类片段" 
+# 导入PyQt5
+from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog
+import PyQt5.QtGui
+# from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt
+import ${1:Ui_Name}
+
+class MyWindow(QtWidgets.${2:QMainWindow or QWidget or QDialog}, ${1:}.${3:Ui_ClassName}):
+	def __init__(self):
+		super(MyWindow,self).__init__()
+		self.setupUi(self)
+		self.setWindowTitle('${4:title}')
+		self.setWindowIcon(QtGui.QIcon('${5:image_path}'))
+		self.program_state = 0
+		self.errormsg = ''
+		self.Thread_Run=False
+		${6}
+
+	#-----------------------------------------------------------
+	# 程序退出时执行
+	#-----------------------------------------------------------
+	def closeEvent(self, event):
+		'''Excute when Window Close'''
+		box = QMessageBox()
+		box.setStyleSheet("""
+			QLabel{
+				min-width: 300px;
+				min-height: 200px;
+				font-size:14px;}
+				""")
+		box.setWindowTitle('提示')
+		box.setText('是否退出?')
+		box.setIcon(QMessageBox.Warning);
+		buttonY = QtWidgets.QPushButton('确定')
+		buttonN = QtWidgets.QPushButton('取消')
+		box.addButton(buttonY, QMessageBox.YesRole)
+		box.addButton(buttonN, QMessageBox.NoRole)
+		box.exec_()
+		if box.clickedButton() == buttonY:
+			self.Thread_Run=False
+
+			event.accept()
+		else:
+			event.ignore()
+
+#-----------------------------------------------------------
+# 窗口显示
+#-----------------------------------------------------------
+def winShow():
+	app = QApplication(sys.argv)
+	# 窗口实例化
+	wind = MyWindow()
+	# 显示窗口
+	wind.show()
+	sys.exit(app.exec_())
+
+#-----------------------------------------------------------
+# 程序入口
+#-----------------------------------------------------------
+if __name__ == "__main__":
+	winShow()
+
+${0}
+endsnippet
+
+snippet cmember-common "类中变量-普通成员变量" b
+self.${1:variable} = ${1:variable}
+${0}
+endsnippet
+
+snippet cmenber-private "类中变量-私有变量" b
+self.__${1:variable} = ${1:variable}
+${0}
+endsnippet
+snippet cmenber-protect "类中变量-保护变量" b
+self._${1:variable} = ${1:variable}
+${0}
+endsnippet
+
+snippet cmethod-common "类中方法-普通方法" b
+def ${1:mothodName}(self,${2:para}) :
+	${0:pass}
+endsnippet
+snippet cmethod-private "类中方法-私有方法" b
+def __${1:mothodName}(self,${2:para}) :
+	${0:pass}
+endsnippet
+snippet cmethod-protect "类中方法-保护方法" b
+def _${1:mothodName}(self,${2:para}) :
+	${0:pass}
+endsnippet
+
+
+snippet messageBox "自定义消息提示框" 
+# 创建一个消息提示框
+${1:boxname} = QMessageBox()
+# 定义弹窗格
+${1:boxname}.setStyleSheet("""
+	QLabel{
+		min-width: 300px;
+		min-height: 200px;
+		font-size:14px;}
+		""")
+# 设置提示框的标题
+${1:boxname}.setWindowTitle('${2:title}')
+# 设置提示框的内容
+${1:boxname}.setText('${3:content}')
+# 设置图标
+${1:boxname}.setIcon(QMessageBox.Information);
+# ${1:boxname}.setIcon(QMessageBox.Warning);
+# ${1:boxname}.setIcon(QMessageBox.Question);
+# ${1:boxname}.setIcon(QMessageBox.Critical);
+# 创建点击按钮，修改文本显示内容
+buttonY = QtWidgets.QPushButton('确定')
+buttonN = QtWidgets.QPushButton('取消')
+# 将按钮加到这个消息盒子中去，功能
+${1:boxname}.addButton(buttonY, QMessageBox.YesRole)
+${1:boxname}.addButton(buttonN, QMessageBox.NoRole)
+# 弹窗显示
+${1:boxname}.exec_()
+# 判断返回值
+if ${1:boxname}.clickedButton() == buttonY:
+	${4:'执行确定程序'}
+	pass
+
+elif ${1:boxname}.clickedButton() == buttonN : 
+	${5:'执行否定程序'}
+	pass
+${0}
+endsnippet
+
+
+snippet close "窗口退出时执行" 
+def closeEvent(self, event):
+	box = QMessageBox()
+	box.setStyleSheet("""
+		QLabel{
+			min-width: 300px;
+			min-height: 200px;
+			font-size:14px;}
+			""")
+	box.setWindowTitle('提示')
+	box.setText('是否退出?')
+	box.setIcon(QMessageBox.Warning);
+	buttonY = QtWidgets.QPushButton('确定')
+	buttonN = QtWidgets.QPushButton('取消')
+	box.addButton(buttonY, QMessageBox.YesRole)
+	box.addButton(buttonN, QMessageBox.NoRole)
+	box.exec_()
+	if box.clickedButton() == buttonY:
+		${1:"执行退出程序"}
+
+		event.accept()
+	else:
+		event.ignore()
+${0}
+endsnippet
+
+snippet thread_start "启动线程" 
+${1:Name}=threading.Thread(target=self.${2:Thread_Name}, name=${3:Custom_Name}, args=(${4:value},))
+${1:}.start()
+${0}
+endsnippet
+
+snippet thread_exe "线程执行片段" 
+#-----------------------------------------------------------
+# 线程执行
+#-----------------------------------------------------------
+def ${1:Thread_Name}(self${2:,parameter_list}):
+	while(${3:True}):
+		'''Execute of here'''
+		${4}
+${0}
+endsnippet
+
+snippet timer "Qt Timer 线程" 
+#-----------------------------------------------------------
+# Qt Timer 线程
+#-----------------------------------------------------------
+def ${1:QtTimer}(self):
+	self.timer = QtCore.QTimer(self)
+	self.timer.setTimerType(0)
+	self.timer.timeout.connect(self.${2:func_Name}) #连接进行执行的函数
+	self.timer.start(${3:time})
+
+${0}
+endsnippet
+
+snippet md5 "md5加密" 
+import hashlib
+${1:md5_Result} = hashlib.md5(${2:Encryped}.encode()).hexdigest()
+${0}
+endsnippet
+
+snippet note "代码段注释" 
+#-----------------------------------------------------------
+# ${1}
+# 
+#-----------------------------------------------------------
+endsnippet
+
+snippet exit "程序退出时执行" 
+from signal import signal, SIGINT
+import os
+
+#-----------------------------------------------------------
+# 程序被kill时执行
+#-----------------------------------------------------------
+def exitProgram(signum, frame):
+	${1}
+	print('程序退出')
+	os._exit(0)
+
+# 使用BeautifulSoup对请求的数据进行请求
+soup = BeautifulSoup(req.text, 'lxml')
+# print(soup.text)
+content = soup.select('${4:select_content}')
+# print((content))
+${0}
+endsnippet
+
+snippet judge-input "判断输入为是/否" 
+#-----------------------------------------------------------
+# input_judgment(question): 输入为提示
+# 返回值：-1 ==== 输入错误
+#          1 ==== 输入yes
+#          2 ==== 输入no
+#-----------------------------------------------------------
+def judgmeInput(question):
+	import re
+
+	str_temp = ''
+	for i in range(int((50-len(question))/4)) :
+			str_temp+='-'
+	print('\n%s %s %s'%(str_temp, question, str_temp))
+
+	result = 0
+	in_input = input("请输入(y/n///回车即为否)：")
+	in_input = in_input.strip()
+	len_input = len(in_input)
+	re_string = in_input
+
+	if len_input==1 :
+		if (in_input=='y') or (in_input=='Y') :
+				#  print('您输入的是：'+in_input)
+				result = 1
+		elif (in_input=='n') or (in_input=='N') :
+				#  print('您输入的是：'+in_input)
+				result = 2
+		else:
+				result = -1
+
+	elif len_input==2 :
+		re_patt_no = r"^[n|N][o|O]$"
+		res = re.match(re_patt_no, re_string)
+		if bool(res) :
+			#  print('您输入的是：'+in_input)
+			result = 2
+		else:
+			result = -1
+
+	elif len_input==3 :
+		re_patt_yes = r"^[y|Y][e|E][s|S]$"
+		res = re.match(re_patt_yes, re_string)
+		if bool(res) :
+			result = 1
+			#  print('您输入的是：'+in_input)
+		else:
+			result = -1
+
+	else:
+			result = -1
+
+	return result
+${0}
+endsnippet
+
+snippet re_find "正则表达式-寻找" 
+import re
+re_patt = r"${1:patt}"
+re_string = ${2:text}
+res = re.match(re_patt, re_string,${3: re.S} ${4:re.M})
+print(res)
+${0}
+endsnippet
+
+snippet re_match "正则表达式-匹配" 
+import re
+re_patt = r"${1:patt}"
+re_string = '${2:text}'
+res = re.match(re_patt, re_string)
+print(bool(res))
+${0}
+endsnippet
+
+snippet re_match-mail "验证邮箱是否合法" 
+import re
+re_patt = r"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$"
+re_string = '${2:text}'
+res = re.match(re_patt, re_string)
+print(bool(res))
+${0}
+endsnippet
+
+snippet re_match-url "验证网址是否合法" 
+import re
+re_patt = '^((ht|f)tps?):\\/\\/[\\w\\-]+(\\.[\\w\\-]+)+([\\w\\-.,@?^=%&:\\/~+#]*[\\w\\-@?^=%&\\/~+#])?$'
+res = re.match(pattern=re_patt, string=${1:text})
+print(bool(res))
+${0}
+endsnippet
+
+snippet judgme-charType "判断输入字符类型函数" 
+#-----------------------------------------------------------
+# 该函数判断输入参数是汉字、数字还是字母
+# 汉字--chinese; 数字---number; 字母---letter
+#-----------------------------------------------------------
+def judgeCharType(uchar):
+	# 是否为汉字
+	if '\u4e00' <= uchar <= '\u9fff': # 是否为汉字
+			return 'chinese'
+	elif '\u0030'<= uchar <= '\u0039': # 是否为数字
+			return 'number'
+	elif ('\u0041' <= uchar <= '\u005a') or ('\u0061'<=uchar<='\u007a'): # 是否为字母
+			return 'letter'
+	else:
+			return 'none'
+${0}
+endsnippet
+
+snippet name-time "获取时间名函数" 
+#-----------------------------------------------------------
+# 该函数实现的是将时间返回文字,可输入指定时间
+#-----------------------------------------------------------
+def getTimeName(hour=''):
+	import time
+	if hour=='':
+			hour = time.strftime('%H')
+	elif not hour.isdigit():
+			return ('输入有误,请核对!')
+
+	hour = int(hour)
+	if hour>23:
+			return '错误的时间'
+
+	if hour>=3 and hour<6:
+			return '凌晨'
+	if hour>=6 and hour<8:
+			return '早晨'
+	if hour>=8 and hour<11:
+			return '上午'
+	if hour>=11 and hour<13:
+			return '中午'
+	if hour>=13 and hour<17:
+			return '下午'
+	if hour>=17 and hour<19:
+			return '傍晚'
+	if hour>=19 and hour<23:
+			return '晚上'
+	if hour==23 or (hour>=0 and hour<3):
+			return '深夜'
+${0}
+endsnippet
+
+snippet mail "邮件发送函数" 
+# -------------------------------------
+# 邮箱发送
+# sendMail(发送方邮箱, 主题, 文本, 抄送(0:不抄送;1:抄送至自己;2:直接输入抄送地址),格式='plain')
+# 返回:{'code':code, 'data':str(e).strip('{}'), 'status':'fail'}
+# 当成功时code=0，status=succ;否则，code=错误代码,data=错误描述，status=fail
+# -------------------------------------
+def sendMail(to_addr, subject, content, cc=0, subtype='plain'):
+	if len(to_addr)==0 :
+		print('您未输入邮箱')
+		return {'code':-1, 'data':'您未输入邮箱，发送操作取消', 'status':'fail'}
+	import smtplib
+	from email.mime.text import MIMEText
+	from email.header import Header
+	import re
+	mail_content = to_addr.split(',')
+	mail_error_number = 0
+	mail_error_addr = ''
+	mail_addr = ''
+	re_patt = r"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$"
+	for i in range(len(mail_content)):
+		# re_string = mail_content[i]
+		res = re.match(re_patt, mail_content[i])
+		if bool(res) :
+			mail_addr += mail_content[i] 
+			mail_addr += ','
+		else :
+			mail_error_number += 1
+			mail_error_addr += mail_content[i]
+			mail_error_addr += ','
+		mail_addr.rstrip(',')
+		mail_error_addr.rstrip(',')
+
+	if len(mail_addr)==0:
+		print('您输入均为无效邮箱，发送操作取消')
+		return {'code':-1, 'data':'您输入均为无效邮箱，发送操作取消', 'status':'fail'}
+
+	# 发送方邮箱
+	from_addr = 'mojony@163.com'
+	# 发送方邮箱密码（这里输入的内容是开启pop3/smtp服务时的授权码）
+	password = 'sqcrocb8586exw'
+	#  smtp服务器地址
+	smtp_server = 'smtp.163.com'
+	# 收件人地址
+	msg = MIMEText('%s' % content, _subtype=subtype, _charset='utf-8')
+	# 设置邮件主题
+	msg["Subject"] = Header(subject, 'utf-8')
+	# 寄件者
+	msg["From"] = Header(from_addr)
+	#  msg["From"] = '<'+from_addr+'>'
+	# 收件者
+	msg["To"] = Header(mail_addr)
+	# 抄送
+	if cc==1:
+			msg['Cc'] = Header(from_addr)
+	elif type(cc)is str :
+			msg['Cc'] = Header(cc)
+
+	#  print(msg)
+
+	try:
+		# smtp协议的默认端口是25，SMTP_SSL服务器端口是465,第一个参数是smtp服务器地址，第二个参数是端口，第三个参数是超时设置,这里必须使用ssl证书，要不链接不上服务器
+		server = smtplib.SMTP_SSL(smtp_server, 465, timeout=20)
+		#  server.set_debuglevel(1)
+		# 登录邮箱
+		server.login(from_addr, password)
+		# 发送邮件，第一个参数是发送方地址，第二个参数是接收方列表，列表中可以有多个接收方地址，表示发送给多个邮箱，msg.as_string()将MIMEText对象转化成文本
+		server.sendmail(from_addr, mail_addr.split(','), msg.as_string())
+		server.quit()
+		#  print ('邮件发送成功')
+		if mail_error_number==0 :
+			return {'code': 0, 'data': {'to': to_addr}, 'status': 'succ'}
+		else :
+			return {'code': -1, 'data':'该邮箱(%s)无效，并无法进行邮件发送；其余邮箱(%s)发送成功'%(mail_error_addr, mail_addr), 'status': 'warn'}
+	except Exception as ex:
+		#  print ('Faild:%s' % ex)
+		re_patt = r"(\d{3}), "
+		code = (re.findall(re_patt, str(ex)))[0]
+		return {'code':code, 'data':str(ex).strip('{}'), 'status':'fail'}
+${0}
+endsnippet
+
+snippet ajax-input_deal "ajax的输入处理函数" 
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def loginSubmit(request) :
+	${1:获取数据}
+
+	if (${2:判断}) :
+		return JsonResponse({'res':1})
+	else:
+		return JsonResponse({'res':0})
+endsnippet
+
+snippet ajax-input_aquire "ajax获取html输入数据" 
+${1:变量} = request.POST.get('${2:html_name}')
+${0}
+endsnippet
+
+
+snippet class_Thread "自定义线程类"
+class ${1:ClassName}(threading.Thread):
+	def __init__(self, ${2:variable},**kwargs):
+		super(CustomThread, self).__init__(**kwargs)
+		self.${2:variable} = ${2:variable}
+	def run(self):
+		while True:
+			# 获取任务
+			task = q.get()
+			# 执行任务--将获取的队列内值传给任务函数
+			${0:}
+
+			# 告诉队列，任务已完成
+			q.task_done()
+endsnippet
+
+snippet file-read "读取文件"
+try:
+	with open(${1:file_path}, 'rb') as fp :
+		${2:name} = fp.read().decode('utf8')
+		# ${2:vname} = text.decode('utf8')
+		fp.close()
+except Exception as ex:
+	print("文件读取失败："+str(ex))
+${0}
+endsnippet
+
+snippet file-write "写入文件"
+try:
+	with open(${1:file_path}, 'w', encoding='utf-8') as fp:
+		fp.write(${2:content})
+		fp.close()
+except Exception as ex:
+	print("文件保存失败："+str(ex))
+${0}
+endsnippet
+
+snippet file-size "文件大小转换，以kb为输入" b
+def fileSize(size):
+	if size>=1073741824 :
+			#  print("%.2f GB" %(size/1024/1024/1024))
+			return "%.2f GB" %(size/1024/1024/1024)
+	elif (size>=1048576) :
+			#  print("%.2f mb" %(size/1024/1024))
+			return "%.2f mb" %(size/1024/1024)
+	elif (size>=1024) :
+			#  print("%.2f kb" %(size/1024))
+			return "%.2f kb" %(size/1024)
+	else :
+			#  print(size,' b')
+			return str(size)+' b'
+endsnippet
+
+snippet file-download "文件下载" 
+
+endsnippet
+
+
+
