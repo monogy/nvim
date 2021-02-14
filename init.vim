@@ -31,7 +31,7 @@ let g:rehash256 = 1
 "
 " 背景透明设置
 " 使用此皮肤时，将不会透明
-" colorscheme molokai
+colorscheme molokai
 " 打开此命令，同时关闭colorscheme时，将启动透明
 hi Normal ctermfg=252 ctermbg=none
 
