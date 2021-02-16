@@ -12,15 +12,26 @@
 ",F7：注释/反注释
 "-/+: 使用此对新窗口的命令上/下移动
 
+" ===
 " === Auto load for first time uses
-" if empty(glob('~/.config/nvim/autoload/plug.vim'))
-	" silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-				" \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	" autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-" endif
-"
-""
-"
+" ===
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+
+" " ===
+" " === Create a _machine_specific.vim file to adjust machine specific stuff, like python interpreter location
+" " ===
+let has_machine_specific_file = 1
+if empty(glob('~/.config/nvim/_machine_specific.vim'))
+	let has_machine_specific_file = 0
+	silent! exec "!cp ~/.config/nvim/default_configs/_machine_specific_default.vim ~/.config/nvim/_machine_specific.vim"
+endif
+source ~/.config/nvim/_machine_specific.vim
+
 " === System
 let &t_ut=''
 set autochdir
@@ -29,41 +40,47 @@ set t_Co=256     "终端开启256色支持"
 " let g:molokai_original = 1
 let g:rehash256 = 1
 "
+" set termguicolors " enable true colors support
+" For Neovim 0.1.3 and 0.1.4
+" let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
 " 背景透明设置
 " 使用此皮肤时，将不会透明
 colorscheme molokai
 " 打开此命令，同时关闭colorscheme时，将启动透明
 hi Normal ctermfg=252 ctermbg=none
 
-" === Eset noexpandtab
+"set clipboard=unnamedplus
+
+" ===
+" === Editor behavior
+" ===
+set exrc
+set secure
 set number
 set relativenumber
 set cursorline
+set hidden
+set showtabline=2
 set noexpandtab
 set tabstop=2
-set ruler
-set cmdheight=2
 set shiftwidth=2
 set softtabstop=2
+set expandtab
 set autoindent
 set list
 set listchars=tab:\|\ ,trail:▫
-set modifiable
 set scrolloff=4
-set timeoutlen=0
+set ttimeoutlen=0
 set notimeout
 set viewoptions=cursor,folds,slash,unix
 set wrap
+set re=0
 set tw=0
-set autoread
-set autowriteall
-""set indentexpr=
+set indentexpr=
 set foldmethod=indent
 set foldlevel=99
 set foldenable
-set viewdir=~/.config/nvim/view
-au BufWinLeave *.* silent mkview
-"au BufWinEnter *.* silent loadview
 set formatoptions-=tc
 set splitright
 set splitbelow
@@ -72,61 +89,57 @@ set showcmd
 set wildmenu
 set ignorecase
 set smartcase
-"set autowrite
-""set shortmess+=c
-syntax on
-filetype plugin indent on
-"set inccommand=split
-set ttyfast "should make scrolling faster
-set lazyredraw "same as above
+set shortmess+=c
+set inccommand=split
+set completeopt=longest,noinsert,menuone,noselect,preview
+" set ttyfast "should make scrolling faster
+" set lazyredraw "same as above
 set visualbell
-
 silent !mkdir -p ~/.config/nvim/tmp/backup
 silent !mkdir -p ~/.config/nvim/tmp/undo
+"silent !mkdir -p ~/.config/nvim/tmp/sessions
 set backupdir=~/.config/nvim/tmp/backup,.
 set directory=~/.config/nvim/tmp/backup,.
-" if has("vms")
-      " set nobackup " do not keep a backup file, use versions instead
-" else
-      " set backup " keep a backup file
 if has('persistent_undo')
 	set undofile
 	set undodir=~/.config/nvim/tmp/undo,.
 endif
-
 set colorcolumn=0
+set updatetime=100
+set virtualedit=block
 set laststatus=2 "1为关闭底部状态栏 2为开启"
-
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
-set ambiwidth=double
-" au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+" set ambiwidth=double
+
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
 
 " 记录光标位置
-augroup resCur
-	autocmd!
-	autocmd BufReadPost * call setpos(".", getpos("'\""))
-augroup END
+" augroup resCur
+	" autocmd!
+	" autocmd BufReadPost * call setpos(".", getpos("'\""))
+" augroup END
 
 " === Terminal Behavior
 let g:neoterm_autoscroll = 1
 autocmd TermOpen term://* startinsert
 tnoremap <C-N> <C-\><C-N>
-""let g:terminal_color_0   = '#000000'
-""let g:terminal_color_1   = '#FF5555'
-""let g:terminal_color_2   = '#50FA7B'
-""let g:terminal_color_3   = '#F1FA8C'
-""let g:terminal_color_4   = '#BD93F9'
-""let g:terminal_color_5   = '#FF79C6'
-""let g:terminal_color_6   = '#8BE9FD'
-""let g:terminal_color_7   = '#BFBFBF'
-""let g:terminal_color_8   = '#4D4D4D'
-""let g:terminal_color_9   = '#FF6E67'
-""let g:terminal_color_10  = '#5AF78E'
-""let g:terminal_color_11  = '#F4F99D'
-""let g:terminal_color_12  = '#CAA9FA'
-""let g:terminal_color_13  = '#FF92D0'
-""let g:terminal_color_14  = '#9AEDFE'
+"let g:terminal_color_0   = '#000000'
+"let g:terminal_color_1   = '#FF5555'
+"let g:terminal_color_2   = '#50FA7B'
+"let g:terminal_color_3   = '#F1FA8C'
+"let g:terminal_color_4   = '#BD93F9'
+"let g:terminal_color_5   = '#FF79C6'
+"let g:terminal_color_6   = '#8BE9FD'
+"let g:terminal_color_7   = '#BFBFBF'
+"let g:terminal_color_8   = '#4D4D4D'
+"let g:terminal_color_9   = '#FF6E67'
+"let g:terminal_color_10  = '#5AF78E'
+"let g:terminal_color_11  = '#F4F99D'
+"let g:terminal_color_12  = '#CAA9FA'
+"let g:terminal_color_13  = '#FF92D0'
+"let g:terminal_color_14  = '#9AEDFE'
 
 " === Basic Mappings
 let mapleader=" "
@@ -294,9 +307,9 @@ endfunc
 " === Install Plugins with Vim-Plug
 call plug#begin('~/.config/nvim/plugged')
 
-" 文件树
+" 文件树 改为coc-explore
 " if has('nvim')
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 " else
 	" Plug 'Shougo/defx.nvim'
 	" Plug 'roxma/nvim-yarp'
@@ -353,6 +366,13 @@ Plug 'CarryHJR/vim-instant-markdown-plus', {'for': 'markdown', 'do': 'npm instal
 " git
 " Plug 'airblade/vim-gitgutter'
 " Plug 'kdheepak/lazygit.nvim'
+Plug 'tpope/vim-fugitive'
+
+Plug 'nvim-lua/lsp-status.nvim'
+" Plug 'autozimu/LanguageClient-neovim', {
+    " \ 'branch': 'next',
+    " \ 'do': 'bash install.sh',
+    " \ }
 
 " Find & Replace
 Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
@@ -360,12 +380,25 @@ Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 "启动界面
 Plug 'mhinz/vim-startify'
 
+" 状态栏主题
 " vim-airline
-Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'bling/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+
+" Plug 'glepnir/spaceline.vim'
+" Use the icon plugin for better behavior
+Plug 'ryanoasis/vim-devicons'
+
+Plug 'liuchengxu/eleline.vim'
+
+" 顶部状态栏
+" Plug 'ap/vim-buftabline'
+Plug 'mg979/vim-xtabline'
+" Plug 'codecopy/vim-xtabline'
 
 "彩虹括号
 Plug 'luochen1990/rainbow'
+
 "indentLine 缩进显示
 Plug 'Yggdroot/indentLine'
 
@@ -381,19 +414,11 @@ Plug 'flazz/vim-colorschemes'
 call plug#end()
 "================================================
 set regexpengine=1
-" set encoding=UTF-8
+set encoding=utf-8
 
 " === Dress up my vim
 set termguicolors	" enable true colors support
 hi NonText ctermfg=gray guifg=grey10
-
-" === Create a _machine_specific.vim file to adjust machine specific stuff, like python interpreter location
-let has_machine_specific_file = 1
-if empty(glob('~/.config/nvim/_machine_specific.vim'))
-	let has_machine_specific_file = 0
-	silent! exec "!cp ~/.config/nvim/default_configs/_machine_specific_default.vim ~/.config/nvim/_machine_specific.vim"
-endif
-source ~/.config/nvim/_machine_specific.vim
 
 " ===================== Start of Plugin Settings =====================
 " === coc
@@ -406,13 +431,18 @@ let g:coc_global_extensions = [
 			\'coc-clangd', 
 			\'coc-python', 
 			\'coc-lists', 
+			\'coc-json',
 			\'coc-pyright', 
+			\'coc-vimlsp',
 			\'coc-html', 
 			\'coc-stylelint', 
 			\'coc-snippets', 
-			\'coc-highlight']
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+			\'coc-highlight',
+			\'coc-explorer',
+			\'coc-git']
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
 
 function! s:check_back_space() abort
 	let col = col('.') - 1
@@ -441,15 +471,13 @@ nmap <LEADER>rn <Plug>(coc-rename)
 nmap <LEADER>rf <plug>(coc-refactor)
 nnoremap <c-c> :CocCommand<CR>
 nnoremap <silent>cs :CocCommand snippets.editSnippets<CR>
+nmap <silent><F3> :CocCommand explorer<CR>
+
 " nmap ts <Plug>(coc-translator-p)
 "nnoremap <silent> K :call CocActionAsync('doHover')<CR>
 
-" if hidden is not set, TextEdit might fail.
-set hidden
 " Better display for messages
 set cmdheight=2
-" You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
 " set nobackup
 " set nowritebackup
 set signcolumn=yes
@@ -486,11 +514,11 @@ let g:ale_linters = {
 "
 "始终开启标志列
 let g:ale_sign_column_always = 1
-let g:ale_set_highlights     = 0
+let g:ale_set_highlights     = 1
 "自定义图标
 let g:ale_sign_error        = '✗'
 let g:ale_sign_warning      = '⚡'
-" let g:ale_statusline_format = ['✗: %d', '⚡': %d', '✔︎: OK']
+let g:ale_statusline_format = ['✗: %d', '⚡: %d', '✔︎: OK']
 "显示Linter名称，出错或警告等相关信息
 let g:ale_echo_msg_error_str   = 'E'
 let g:ale_echo_msg_warning_str = 'W'
@@ -540,6 +568,7 @@ let g:multi_cursor_next_key            = '<C-m>'
 let g:multi_cursor_prev_key            = '<C-p>'
 let g:multi_cursor_skip_key            = '<C-x>'
 let g:multi_cursor_quit_key            = '<Esc>'
+
 " === Vista.vim
 noremap <silent><F4> :Vista!!<CR>
 noremap <silent><C-t> :Vista finder<CR>
@@ -571,34 +600,34 @@ let g:ranger_map_keys = 0
 let g:colorizer_syntax = 1
 
 " 文件树配置
-nmap <silent><F3> :Defx<CR>
-autocmd FileType defx call s:defx_mappings()
-call defx#custom#option('_', {
-			\ 'winwidth': 20,
-			\ 'split': 'vertical',
-			\ 'direction': 'topleft',
-			\ 'show_ignored_files': 0,
-			\ 'buffer_name': '',
-			\ 'toggle': 1,
-			\ 'resume': 1
-			\ })
-function! s:defx_mappings() abort
-	nnoremap <silent><buffer><expr> o     <SID>defx_toggle_tree()                    " 打开或关闭文件/文件夹
-	nnoremap <silent><buffer><expr> h     defx#do_action('toggle_ignored_files')     " 显示隐藏文件
-	nnoremap <silent><buffer><expr> <C-r>  defx#do_action('redraw')
-endfunction
+" nmap <silent><F3> :Defx<CR>
+" autocmd FileType defx call s:defx_mappings()
+" call defx#custom#option('_', {
+			" \ 'winwidth': 20,
+			" \ 'split': 'vertical',
+			" \ 'direction': 'topleft',
+			" \ 'show_ignored_files': 0,
+			" \ 'buffer_name': '',
+			" \ 'toggle': 1,
+			" \ 'resume': 1
+			" \ })
+" function! s:defx_mappings() abort
+	" nnoremap <silent><buffer><expr> o     <SID>defx_toggle_tree()                    " 打开或关闭文件/文件夹
+	" nnoremap <silent><buffer><expr> h     defx#do_action('toggle_ignored_files')     " 显示隐藏文件
+	" nnoremap <silent><buffer><expr> <C-r>  defx#do_action('redraw')
+" endfunction
 
-function! s:defx_toggle_tree() abort
-	" Open current file, or toggle directory expand/collapse
-	if defx#is_directory()
-		return defx#do_action('open_or_close_tree')
-	endif
-	return defx#do_action('multi', ['drop'])
-endfunction
+" function! s:defx_toggle_tree() abort
+	" " Open current file, or toggle directory expand/collapse
+	" if defx#is_directory()
+		" return defx#do_action('open_or_close_tree')
+	" endif
+	" return defx#do_action('multi', ['drop'])
+" endfunction
 
 
 " ===
-" === vimspector
+" === 程序调试 vimspector
 " ===
 " let g:vimspector_enable_mappings = 'HUMAN'
 function! s:read_template_into_buffer(template)
@@ -636,39 +665,37 @@ let g:NERDSpaceDelims=1 "注释后自动添加一个空格
 "注释/反注释
 map  <silent><F7> <plug>NERDCommenterToggle
 
-"air-line配置
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
-endif
-let g:airline_left_sep       = '▶'
-let g:airline_left_alt_sep   = '❯'
-let g:airline_right_sep      = '◀'
-let g:airline_right_alt_sep  = '❮'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-" 是否打开tabline
-let g:airline#extensions#tabline#enabled = 1
-" 打开后，tabline和tmuxline都可以得到增强
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#tabline#left_sep       = ' '
-let g:airline#extensions#tabline#left_alt_sep   = '|'
-" show tab number in tab line
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#formatter   = 'default'
-let g:airline#extensions#vimtex#left         = " "
-let g:airline#extensions#vimtex#right        = " "
+
+" === 状态栏插件 === "
+
+" === 顶部状态栏xtabline
+
+" 打开nvim时，更换xtabline主题
+autocmd VimEnter * XTabTheme dracula
+
+let g:xtabline_settings = {}
+let g:xtabline_settings.enable_mappings = 0
+let g:xtabline_settings.tabline_modes = ['buffers', 'tabs', 'arglist']
+let g:xtabline_settings.enable_persistance = 1
+let g:xtabline_settings.last_open_first = 1
+let g:xtabline_settings.wd_type_indicator = 1
+let g:xtabline_settings.buffers_paths = -1
+" let g:xtabline_settings.current_tab_paths = -2
+" let g:xtabline_settings.other_tabs_paths = -2
+" let g:xtabline_settings.recent_buffers = 10
+let g:xtabline_settings.special_tabs = 1
+let g:xtabline_settings.wd_type_indicator = 1
+
+noremap to :XTabMode<CR>
+noremap \p :echo expand('%:p')<CR>
+
 " sa sd sc：左移、右移、关闭buffer
 noremap <silent>sd :bn<CR>
 noremap <silent>sa :bp<CR>
 noremap <silent>sc :bd<CR>
 
-let g:airline#extensions#whitespace#enabled=1
-let g:airline_theme='molokai'
-
-" let g:airline_theme='molokai'
-" colorscheme molokai
-" let g:molokai_original = 1
+" === 底部状态栏 eleline
+let g:eleline_powerline_fonts = 1
 
 " rainbow 彩虹括号
 let g:rainbow_active = 1
@@ -822,26 +849,6 @@ let g:instant_markdown_autostart = 0
 " let g:instant_markdown_allow_external_content = 0
 " let g:instant_markdown_mathjax = 1
 let g:instant_markdown_autoscroll = 1
-
-" ===
-" === Bullets.vim
-" ===
-" let g:bullets_set_mappings = 0
-" let g:bullets_enabled_file_types = [
-			" \ 'markdown',
-			" \ 'text',
-			" \ 'gitcommit',
-			" \ 'scratch'
-			" \]
-
-" ===
-" === lazygit.nvim
-" ===
-" noremap <c-g> :LazyGit<CR>
-" let g:lazygit_floating_window_winblend = 0 " transparency of floating window
-" let g:lazygit_floating_window_scaling_factor = 1.0 " scaling factor for floating window
-" let g:lazygit_floating_window_corner_chars = ['╭', '╮', '╰', '╯'] " customize lazygit popup window corner characters
-" let g:lazygit_use_neovim_remote = 1 " for neovim-remote support
 
 
 " ===================== End of Plugin Settings =====================
