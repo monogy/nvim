@@ -114,6 +114,10 @@ source $VIMRUNTIME/menu.vim
 
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" 解决中文乱码问题
+set termencoding=utf-8
+set encoding=utf8
+set fileencodings=utf8,ucs-bom,gbk,cp936,gb2312,gb18030
 
 " 记录光标位置
 " augroup resCur
@@ -228,7 +232,7 @@ noremap sj :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
 noremap sl :set splitright<CR>:vsplit<CR>
 
 " Press <SPACE> + q to close the window below the current window
-noremap <LEADER>q <C-w>j:q<CR>
+" noremap <LEADER>q <C-w>j:q<CR>
 
 " Resize splits with arrow keys
 noremap <up> :res +5<CR>
@@ -880,4 +884,5 @@ noremap <silent><leader>/ :noh<cr>
 
 noremap <c-g> :tabe<CR>:-tabmove<CR>:term lazygit<CR>
 
-
+" 宏录制
+noremap <leader>q :normal @
