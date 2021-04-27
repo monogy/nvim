@@ -581,7 +581,11 @@ noremap <LEADER>d :Fardo<CR>
 noremap <silent><F6> :Autoformat<CR>
 let g:autoformat_verbosemode=1
 let g:formatter_yapf_style = 'pep8'
-au BufWrite * :Autoformat
+au BufWrite *.py :Autoformat
+au BufWrite *.c :Autoformat
+au BufWrite *.cpp :Autoformat
+au BufWrite *.h :Autoformat
+au BufWrite *.html :Autoformat
 
 
 " Tabular
