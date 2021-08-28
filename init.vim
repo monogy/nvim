@@ -517,8 +517,8 @@ let g:VM_maps                       = {}
 let g:VM_custom_motions             = {'i': 'k', 'j': 'h', 'k': 'j', 'h': 'i'}
 let g:VM_maps['i']                  = 'h'
 let g:VM_maps['I']                  = 'H'
-let g:VM_maps['Find Under']         = '<C-k>'
-let g:VM_maps['Find Subword Under'] = '<C-k>'
+let g:VM_maps['Find Under']         = '<C-m>'
+let g:VM_maps['Find Subword Under'] = '<C-m>'
 let g:VM_maps['Find Next']          = 'n'
 let g:VM_maps['Find Prev']          = 'N'
 let g:VM_maps['Remove Region']      = 'q'
@@ -581,11 +581,11 @@ noremap <LEADER>d :Fardo<CR>
 noremap <silent><F6> :Autoformat<CR>
 let g:autoformat_verbosemode=1
 let g:formatter_yapf_style = 'pep8'
-au BufWrite *.py :Autoformat
-au BufWrite *.c :Autoformat
-au BufWrite *.cpp :Autoformat
-au BufWrite *.h :Autoformat
-au BufWrite *.html :Autoformat
+" au BufWrite *.py :Autoformat
+" au BufWrite *.c :Autoformat
+" au BufWrite *.cpp :Autoformat
+" au BufWrite *.h :Autoformat
+" au BufWrite *.html :Autoformat
 
 
 " Tabular
@@ -741,17 +741,17 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 " 中英文输入法切换
 let g:input_toggle = 1
 function! Fcitx2en()
-  let s:input_status = system("fcitx-remote")
+  let s:input_status = system("fcitx5-remote")
   if s:input_status == 2
     let g:input_toggle = 1
-    let l:a = system("fcitx-remote -c")
+    let l:a = system("fcitx5-remote -c")
   endif
 endfunction
 
 function! Fcitx2zh()
-  let s:input_status = system("fcitx-remote")
+  let s:input_status = system("fcitx5-remote")
   if s:input_status != 2 && g:input_toggle == 1
-    let l:a = system("fcitx-remote -o")
+    let l:a = system("fcitx5-remote -o")
     let g:input_toggle = 0
   endif
 endfunction
