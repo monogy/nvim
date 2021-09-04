@@ -291,7 +291,7 @@ func! CompileRunGcc()
   elseif &filetype == 'html'
     silent! exec "!".g:mkdp_browser." % &"
   elseif &filetype == 'markdown'
-    exec "InstantMarkdownPreview"
+    exec "MarkdownPreview"
     " elseif &filetype == 'tex'
     " silent! exec "VimtexStop"
     " silent! exec "VimtexCompile"
@@ -365,8 +365,9 @@ Plug 'kshenoy/vim-signature'
 " Markdown
 " Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle', 'for': ['text', 'markdown', 'vim-plug'] }
 " Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
-Plug 'CarryHJR/vim-instant-markdown-plus', {'for': 'markdown', 'do': 'npm install -g instant-markdown-d'}
+" Plug 'CarryHJR/vim-instant-markdown-plus', {'for': 'markdown', 'do': 'npm install -g instant-markdown-d'}
 " Plug 'dkarter/bullets.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 " git
 " Plug 'airblade/vim-gitgutter'
@@ -875,13 +876,7 @@ endfunction
 " === vim-instant-markdown
 " ===
 filetype plugin on
-let g:instant_markdown_slow = 0
-let g:instant_markdown_autostart = 0
-" let g:instant_markdown_open_to_the_world = 1
-" let g:instant_markdown_allow_unsafe_content = 1
-" let g:instant_markdown_allow_external_content = 0
-" let g:instant_markdown_mathjax = 1
-let g:instant_markdown_autoscroll = 1
+let g:mkdp_page_title = '「${name}」'
 
 " ===================== End of Plugin Settings =====================
 
