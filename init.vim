@@ -181,6 +181,8 @@ noremap \t :term<CR>
 " 全选
 noremap <silent><C-a> ggVG
 
+noremap <silent><leader>w vaw
+
 " 插入新行
 nnoremap <silent><LEADER><CR> i<CR><ESC>i
 
@@ -203,7 +205,7 @@ noremap <silent> L 5l
 noremap <silent> J 5h
 
 " b key: go to the start of the line
-noremap <silent> b ^
+noremap <silent> E ^
 " B key: go to the end of the line
 noremap <silent> B $
 
@@ -236,15 +238,15 @@ noremap sl :set splitright<CR>:vsplit<CR>
 " noremap <LEADER>q <C-w>j:q<CR>
 
 " Resize splits with arrow keys
-noremap <up> :res +5<CR>
-noremap <down> :res -5<CR>
-noremap <left> :vertical resize-5<CR>
-noremap <right> :vertical resize+5<CR>
+noremap <leader><up> :res +5<CR>
+noremap <leader><down> :res -5<CR>
+noremap <leader><left> :vertical resize-5<CR>
+noremap <leader><right> :vertical resize+5<CR>
 
 " Place the two screens up and down
-" noremap sh <C-w>t<C-w>K
+noremap sh <C-w>t<C-w>K
 " Place the two screens side by side
-" noremap sv <C-w>t<C-w>H
+noremap sv <C-w>t<C-w>H
 
 " Rotate screens
 " noremap srh <C-w>b<C-w>K
@@ -345,7 +347,7 @@ Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-
 Plug 'Vimjas/vim-python-pep8-indent', { 'for' :['python', 'vim-plug'] }
 
 " 多光标操作
-Plug 'terryma/vim-multiple-cursors'
+" Plug 'terryma/vim-multiple-cursors'
 
 " 复制可视化
 Plug 'junegunn/vim-peekaboo'
@@ -479,7 +481,7 @@ nmap <LEADER>rc <plug>(coc-cursors-word)
 nmap <LEADER>rw :CocCommand document.renameCurrentWord<CR>
 nmap <LEADER>rn <Plug>(coc-rename)
 nmap <LEADER>rf <plug>(coc-refactor)
-nnoremap <c-c> :CocCommand<CR>
+" nnoremap <c-c> :CocCommand<CR>
 nnoremap <LEADER>cs :CocCommand snippets.editSnippets<CR>
 nmap <silent><F3> :CocCommand explorer<CR>
 
@@ -564,16 +566,43 @@ let g:LanguageClient_serverCommands = {
       \ }
 
 " === FZF
-noremap FF :Files
-noremap FB :Buffers
-noremap FH :History:<CR>
-noremap FM :Maps<CR>
+noremap <c-p> :FZF <right>
+" noremap <c-f> :Ag<CR>
+noremap fb :Buffers
+noremap fh :History<CR>
+noremap fm :Maps<CR>
 let g:fzf_preview_window = 'right:80%'
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+" let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, <bang>0)
 
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+
+autocmd! FileType fzf set laststatus=0 noshowmode noruler
+      \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
+command! -bang -nargs=? -complete=dir Files
+      \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'cat {}']}, <bang>0)
+
 " === far.vim
-noremap <LEADER>f :Far  %<left><left>
+set lazyredraw            " improve scrolling performance when navigating through large results
+set regexpengine=1        " use old regexp engine
+set ignorecase smartcase  " ignore case only when the pattern contains no capital letters
+let g:far#enable_undo=1
+
+" nnoremap <c-h> <Replace-Shortcut>  :Farr<cr>
+" nnoremap <c-h> <Replace-Shortcut>  :Farr<cr>
+noremap <c-h> :Far  %<left><left>
+noremap <c-f> :F <right>
 noremap <LEADER>d :Fardo<CR>
 
 
@@ -618,13 +647,13 @@ let g:vista#renderer#enable_icon = 1
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'readonly', 'filename', 'modified', 'method' ] ]
-      \ },
-      \ 'component_function': {
-      \   'method': 'NearestMethodOrFunction'
-      \ },
-      \ }
+        \   'left': [ [ 'mode', 'paste' ],
+        \             [ 'readonly', 'filename', 'modified', 'method' ] ]
+        \ },
+        \ 'component_function': {
+          \   'method': 'NearestMethodOrFunction'
+          \ },
+          \ }
 
 " === Ranger.vim
 nnoremap R :Ranger<CR>
@@ -673,7 +702,7 @@ command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
       \   'down': 20,
       \   'sink': function('<sid>read_template_into_buffer')
       \ })
-noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
+noremap <leader>vj :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
 noremap <leader>vr :VimspectorRestart<CR>
 
 sign define vimspectorBP text=☛ texthl=Normal
@@ -681,17 +710,17 @@ sign define vimspectorBPDisabled text=☞ texthl=Normal
 sign define vimspectorPC text=🔶 texthl=SpellBad
 
 " 快捷键
-nmap fc <Plug>VimspectorContinue
-nmap fs <Plug>VimspectorStop
-nmap fr <Plug>VimspectorRestart
-nmap fp <Plug>VimspectorPause
-nmap fb <Plug>VimspectorToggleBreakpoint
-nmap fg <Plug>VimspectorToggleBreakpoint( { trigger expr, hit count expr } )
-nmap fa <Plug>VimspectorAddFunctionBreakpoint( '<cexpr>' )
-nmap ft <Plug>VimspectorRunToCursor
-nmap fv <Plug>VimspectorStepOver
-nmap fi <Plug>VimspectorInto
-nmap fo <Plug>VimspectorStepOut
+nmap tc <Plug>VimspectorContinue
+nmap ts <Plug>VimspectorStop
+nmap tr <Plug>VimspectorRestart
+nmap tp <Plug>VimspectorPause
+nmap tb <Plug>VimspectorToggleBreakpoint
+nmap tg <Plug>VimspectorToggleBreakpoint( { trigger expr, hit count expr } )
+nmap ta <Plug>VimspectorAddFunctionBreakpoint( '<cexpr>' )
+nmap tt <Plug>VimspectorRunToCursor
+nmap tv <Plug>VimspectorStepOver
+nmap ti <Plug>VimspectorInto
+nmap to <Plug>VimspectorStepOut
 
 
 " Nerd-Commenter
@@ -721,6 +750,7 @@ let g:xtabline_settings.special_tabs = 1
 let g:xtabline_settings.wd_type_indicator = 1
 
 noremap to :XTabMode<CR>
+" 显示该文件路径
 noremap \p :echo expand('%:p')<CR>
 
 " sa sd sc：左移、右移、关闭buffer
@@ -911,4 +941,4 @@ noremap <c-g> :tabe<CR>:-tabmove<CR>:term lazygit<CR>
 noremap <leader>q :normal @
 
 " 在插入模式下，插入时间
-inoremap <silent><leader>* <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
+inoremap <silent><leader>** <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
